@@ -132,7 +132,7 @@ function handleMessage(sender_psid, received_message) {
         break;
       case 1:
         // location
-        db.collection('shares').doc(docId).add({
+        db.collection('shares').doc(docId).set({
           location: received_message
         });
         // expiry
@@ -140,7 +140,7 @@ function handleMessage(sender_psid, received_message) {
         break;
       case 2:
         // expiry
-        db.collection('shares').doc(docId).add({
+        db.collection('shares').doc(docId).set({
           bestBefore: admin.firestore.Timestamp.fromDate(new Date(received_message))
         });
         // dietary restriction
@@ -148,7 +148,7 @@ function handleMessage(sender_psid, received_message) {
         break;
       case 3:
         // dietary restriction
-        db.collection('shares').doc(docId).add({
+        db.collection('shares').doc(docId).set({
           dietRestrictions: received_message.split(" ")
         });
         // photo
