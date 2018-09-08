@@ -134,7 +134,7 @@ function handleMessage(sender_psid, received_message) {
       case 1:
         // location
         db.collection('Shares').doc(docId).set({
-          location: received_message
+          location: received_message.text
         });
         // expiry
         text = 'Please indicate the time of expiry of the food (YYYY-MM-DD HH:MM:SS).'
@@ -150,7 +150,7 @@ function handleMessage(sender_psid, received_message) {
       case 3:
         // dietary restriction
         db.collection('Shares').doc(docId).set({
-          dietRestrictions: received_message.split(" ")
+          dietRestrictions: received_message.text.split(" ")
         });
         // photo
         text = 'Please take a photo of the food so that we can estimate the number of containers we need to bring with us.'
