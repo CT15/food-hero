@@ -3,7 +3,7 @@ let express = require('express'),
   bodyParser = require('body-parser'),
   app = express();
 
-const http = require('http');
+const https = require('https');
 
 var admin = require("firebase-admin");
 
@@ -243,7 +243,7 @@ function handlePostback(sender_psid, received_postback) {
     });
 
     let url = 'https://foodhero.pythonanywhere.com/foodhero/default/numBoxes?url=' + attachment_url + '&width=2.5';
-    http.get(url, function(res){
+    https.get(url, function(res){
       var body = '';
   
       res.on('data', function(chunk){
