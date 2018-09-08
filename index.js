@@ -138,7 +138,7 @@ function handleMessage(sender_psid, received_message) {
           location: received_message.text
         });
         // expiry
-        text = 'Please indicate the number of hour left till the expiry of food.'
+        text = 'Please indicate the number of hours (or part thereof) left till the expiry of food.'
         response = {
           "text": text
         }
@@ -149,7 +149,7 @@ function handleMessage(sender_psid, received_message) {
           bestBefore: received_message.text
         });
         // dietary restriction
-        text = 'If the food is not suitable for people with any special dietary restrictions, please indicate so (e.g. halal, vegetarion). Otherwise, please reply "None". '
+        text = 'If the food is suitable for people with any special dietary restrictions, please indicate so (e.g. halal, vegetarian). Otherwise, please reply "None". '
         response = {
           "text": text
         }
