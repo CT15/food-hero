@@ -91,10 +91,27 @@ function handleMessage(sender_psid, received_message) {
     // will be added to the body of our request to the Send API
 
     let text = '';
+    var message = '';
     switch(messageCount) {
       case 0:
         // location
-        text = 'Hi! Do you have any extra food you would like to donate? Please indicate your location so that we can pick it up.';
+        text = "Please share your location with me so that we can come and pick up your food!"
+          response = {"message":{
+            "text": "Here is a quick reply example!",
+            "quick_replies":[
+              {
+                "content_type":"text",
+                "title":"Search",
+                "payload":"<POSTBACK_PAYLOAD>",
+                "image_url":"http://example.com/img/red.png"
+              },
+              {
+                "content_type":"location"
+              }
+            ]
+          }
+        }
+
         break;
       case 1:
         // expiry
@@ -216,5 +233,7 @@ const askTemplate = (text) => {
     }
   }
 }
+
+
 
 
