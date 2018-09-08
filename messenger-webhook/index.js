@@ -60,8 +60,10 @@ app.post('/webhook', (req, res) => {
             // pass the event to the appropriate handler function
             if (webhook_event.message) {
                 console.log(webhook_event.message)
+                handleMessage(sender_psid, webhook_event.message)
             } else if (webhook_event.postback) {
                 console.log(webhook_event.postback)
+                handlePostback(sender_psid, webhook_event.postback)
             }
         });
  
@@ -85,27 +87,6 @@ const handleMessage = (sender_psid, received_message) => {
  
 // 
 
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
 const handlePostback = (sender_psid, received_postback) => {
     let response;
  
@@ -131,13 +112,5 @@ const handlePostback = (sender_psid, received_postback) => {
     // Send the message to acknowledge the postback
 }
 
-// Check if the event is a message or postback and
-// pass the event to the appropriate handler function
-if (webhook_event.message) {
-  handleMessage(sender_psid, webhook_event.message);
-  console.log('event is a message')
-} else if (webhook_event.postback) {
-  handlePostback(sender_psid, webhook_event.postback);
-  console.log('event is a postback')
-}
+
 
