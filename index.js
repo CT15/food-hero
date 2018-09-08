@@ -96,6 +96,7 @@ app.post('/webhook', (req, res) => {
 });
 
 let docId = '';
+let attachment_url = '';
 
 function handleMessage(sender_psid, received_message) {
   let response;
@@ -195,7 +196,7 @@ function handleMessage(sender_psid, received_message) {
 
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
-    let attachment_url = received_message.attachments[0].payload.url;
+    attachment_url = received_message.attachments[0].payload.url;
     response = {
       "attachment": {
         "type": "template",
@@ -238,7 +239,7 @@ function handlePostback(sender_psid, received_postback) {
   // Set the response based on the postback payload
   if (payload === 'yes') {
     db.collection('Shares').doc(docId).update({
-      image: received_postback
+      image: attachment_url
     });
     response = { "text": "That is all. Thank you! We will be collecting the food at the indicated timing." }
     messageCount = 0;
