@@ -114,22 +114,24 @@ function handleMessage(sender_psid, received_message) {
 
         // location
         text = "Please share your location with me so that we can come and pick up your food!"
-          // response = {"message":{
-          //   "text": "Here is a quick reply example!",
-          //   "quick_replies":[
-          //     {
-          //       "content_type":"text",
-          //       "title":"Search",
-          //       "payload":"<POSTBACK_PAYLOAD>",
-          //       "image_url":"http://example.com/img/red.png"
-          //     },
-          //     {
-          //       "content_type":"location"
-          //     }
-          //   ]
-          // }
-        //}
-
+          response = {"message":{
+            "text": "Here is a quick reply example!",
+            "quick_replies":[
+              {
+                "content_type":"text",
+                "title":"Search",
+                "payload":"<POSTBACK_PAYLOAD>",
+                "image_url":"http://example.com/img/red.png"
+              },
+              {
+                "content_type":"location"
+              }
+            ]
+          }
+        }
+        response = {
+          "text": text
+        }
         break;
       case 1:
         // location
@@ -138,6 +140,9 @@ function handleMessage(sender_psid, received_message) {
         });
         // expiry
         text = 'Please indicate the time of expiry of the food (YYYY-MM-DD HH:MM:SS).'
+        response = {
+          "text": text
+        }
         break;
       case 2:
         // expiry
@@ -146,6 +151,9 @@ function handleMessage(sender_psid, received_message) {
         });
         // dietary restriction
         text = 'If the food is not suitable for people with any special dietary restrictions, please indicate so (e.g. halal, vegetarion). Otherwise, please reply "None". '
+        response = {
+          "text": text
+        }
         break;
       case 3:
         // dietary restriction
@@ -154,12 +162,12 @@ function handleMessage(sender_psid, received_message) {
         });
         // photo
         text = 'Please take a photo of the food so that we can estimate the number of containers we need to bring with us.'
+        response = {
+          "text": text
+        }
         break;
     }
 
-    response = {
-      "text": text
-    }
 
     messageCount++;
 
