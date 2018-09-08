@@ -3,7 +3,7 @@ let express = require('express'),
   bodyParser = require('body-parser'),
   app = express();
 
-const moment = require('moment');
+const http = require('http');
 
 var admin = require("firebase-admin");
 
@@ -241,7 +241,25 @@ function handlePostback(sender_psid, received_postback) {
     db.collection('Shares').doc(docId).update({
       image: attachment_url
     });
-    response = { "text": "That is all. Thank you! We will be collecting the food at the indicated timing." }
+
+    let url = 'https://foodhero.pythonanywhere.com/foodhero/default/numBoxes?url=' + attachment_url + '&width=2.5';
+    http.get(url, function(res){
+      var body = '';
+  
+      res.on('data', function(chunk){
+          body += chunk;
+      });
+  
+      res.on('end', function(){
+          var json = JSON.parse(body);
+          console.log("json obj", json)
+          console.log("Got a response: ", json.numBoxes);
+      });
+    }).on('error', function(e){
+        console.log("Got an error: ", e);
+    });
+
+    response = { "text": "That is all. Thank you! We will be bringing " + json.numBoxes + "boxes with us. Collecting the food at the indicated timing." }
     messageCount = 0;
   } else if (payload === 'no') {
     response = { "text": "Oops, try sending another image." }
