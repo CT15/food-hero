@@ -3,14 +3,23 @@ let express = require('express'),
   bodyParser = require('body-parser'),
   app = express();
 
+var admin = require("firebase-admin");
+
+var serviceAccount = require("./fbreducewastage-firebase-adminsdk-j5xi5-9fb749300a.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://fbreducewastage.firebaseio.com"
+});
+
+var db = admin.firestore();
+
 const request = require('request');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.listen(process.env.PORT || 1337, () => console.log('Example app listening on port 8989!'));
-
-//app.get('/', (req, res) => res.send('583615801'));
+app.listen(process.env.PORT || 1337, () => console.log('Example app listening on port 1337!'));
 
 // Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
@@ -81,6 +90,7 @@ app.post('/webhook', (req, res) => {
 });
 
 let messageCount = 0;
+let docId = '';
 
 function handleMessage(sender_psid, received_message) {
   let response;
@@ -93,18 +103,37 @@ function handleMessage(sender_psid, received_message) {
     let text = '';
     switch(messageCount) {
       case 0:
+        db.collection('shares').add({
+          isAvailable: true,
+          submissionTime: admin.firestore.Timestamp.fromDate(new Date())
+        }).then(ref => {
+          docId = ref.id;
+        });
+
         // location
         text = 'Hi! Do you have any extra food you would like to donate? Please indicate your location so that we can pick it up.';
         break;
       case 1:
+        // location
+        db.collection('shares').doc(docId).add({
+          location: received_message
+        });
         // expiry
-        text = 'Please indicate the time of expiry of the food (day and time).'
+        text = 'Please indicate the time of expiry of the food (YYYY/MM/DD HH:MM:SS).'
         break;
       case 2:
+        // expiry
+        db.collection('shares').doc(docId).add({
+          bestBefore: admin.firestore.Timestamp.fromDate(new Date(received_message))
+        });
         // dietary restriction
         text = 'If the food is not suitable for people with any special dietary restrictions, please indicate so (e.g. halal, vegetarion). Otherwise, please reply "None". '
         break;
       case 3:
+        // dietary restriction
+        db.collection('shares').doc(docId).add({
+          dietRestrictions: received_message.split(" ")
+        });
         // photo
         text = 'Please take a photo of the food so that we can estimate the number of containers we need to bring with us.'
         break;
@@ -161,6 +190,7 @@ function handlePostback(sender_psid, received_postback) {
   // Set the response based on the postback payload
   if (payload === 'yes') {
     response = { "text": "Thanks!" }
+    messageCount = 0;
   } else if (payload === 'no') {
     response = { "text": "Oops, try sending another image." }
   }
