@@ -113,21 +113,21 @@ function handleMessage(sender_psid, received_message) {
 
         // location
         text = "Please share your location with me so that we can come and pick up your food!"
-          response = {"message":{
-            "text": "Here is a quick reply example!",
-            "quick_replies":[
-              {
-                "content_type":"text",
-                "title":"Search",
-                "payload":"<POSTBACK_PAYLOAD>",
-                "image_url":"http://example.com/img/red.png"
-              },
-              {
-                "content_type":"location"
-              }
-            ]
-          }
-        }
+          // response = {"message":{
+          //   "text": "Here is a quick reply example!",
+          //   "quick_replies":[
+          //     {
+          //       "content_type":"text",
+          //       "title":"Search",
+          //       "payload":"<POSTBACK_PAYLOAD>",
+          //       "image_url":"http://example.com/img/red.png"
+          //     },
+          //     {
+          //       "content_type":"location"
+          //     }
+          //   ]
+          // }
+        //}
 
         break;
       case 1:
