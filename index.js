@@ -234,7 +234,7 @@ function handlePostback(sender_psid, received_postback) {
     db.collection('Shares').doc(docId).update({
       image: received_postback.referral.source
     });
-    response = { "text": "Thanks!" }
+    response = { "text": "That is all. Thank you! We will be collecting the food at the indicated timing." }
     messageCount = 0;
   } else if (payload === 'no') {
     response = { "text": "Oops, try sending another image." }
