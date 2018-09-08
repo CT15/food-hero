@@ -14,6 +14,8 @@ admin.initializeApp({
   databaseURL: "https://fbreducewastage.firebaseio.com"
 });
 
+var FieldValue = require('firebase-admin').firestore.FieldValue;
+
 var db = admin.firestore();
 
 let messageCount = 0;
@@ -109,7 +111,7 @@ function handleMessage(sender_psid, received_message) {
       case 0:
         db.collection('Shares').add({
           isAvailable: true,
-          submissionTime: new Date()
+          submissionTime: FieldValue.serverTimestamp()
         }).then(ref => {
           docId = ref.id;
         });
@@ -135,7 +137,7 @@ function handleMessage(sender_psid, received_message) {
           location: received_message.text
         });
         // expiry
-        text = 'Please indicate the time of expiry of the food (YYYY-MM-DD HH:MM:SS).'
+        text = 'Please indicate the number of hour left till the expiry of food.'
         response = {
           "text": text
         }
@@ -143,7 +145,7 @@ function handleMessage(sender_psid, received_message) {
       case 2:
         // expiry
         db.collection('Shares').doc(docId).update({
-          bestBefore: admin.firestore.Timestamp.fromDate(new Date(received_message.text))
+          bestBefore: received_message.text
         });
         // dietary restriction
         text = 'If the food is not suitable for people with any special dietary restrictions, please indicate so (e.g. halal, vegetarion). Otherwise, please reply "None". '
@@ -166,12 +168,12 @@ function handleMessage(sender_psid, received_message) {
           title: received_message.text
         });
         // collection time
-        text = 'When do you want us to collect the food (YYYY-MM-DD HH:MM:SS)?'
+        text = 'Please indicate how long more (in hour) you want us to come and pick up the food.'
         break;
       case 5:
         // collection time
         db.collection('Shares').doc(docId).update({
-          collectionTime: admin.firestore.Timestamp.fromDate(new Date(received_message.text))
+          collectionTime: received_message.text
         });
 
         // photo
