@@ -161,7 +161,7 @@ function handleMessage(sender_psid, received_message) {
       "text": text
     }
 
-    //messageCount++;
+    messageCount++;
 
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
