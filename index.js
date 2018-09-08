@@ -80,6 +80,8 @@ app.post('/webhook', (req, res) => {
 
 });
 
+let messageCount = 0;
+
 function handleMessage(sender_psid, received_message) {
   let response;
   
@@ -87,9 +89,31 @@ function handleMessage(sender_psid, received_message) {
   if (received_message.text) {    
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
-    response = {
-      "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
+
+    let text = '';
+    switch(messageCount) {
+      case 0:
+        // location
+        text = 'Hi! Do you have any extra food you would like to donate? Please indicate your location so that we can pick it up.';
+        break;
+      case 1:
+        // expiry
+        text = 'Please indicate the time of expiry of the food (day and time).'
+        break;
+      case 2:
+        // dietary restriction
+        text = 'If the food is not suitable for people with any special dietary restrictions, please indicate so (e.g. halal, vegetarion). Otherwise, please reply "None". '
+        break;
+      case 3:
+        // photo
+        text = 'Please take a photo of the food so that we can estimate the number of containers we need to bring with us.'
+        break;
     }
+
+    response = {
+      "text": text
+    }
+
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
     let attachment_url = received_message.attachments[0].payload.url;
