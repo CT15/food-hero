@@ -126,6 +126,7 @@ const handlePostback = (sender_psid, received_postback) => {
     } else if(payload){
         response = askTemplate('Are you a Cat or Dog Person?');
         callSendAPI(sender_psid, response);
+        console.log('inside payload and printing response because of callSendAPI')
     }
     // Send the message to acknowledge the postback
 }
@@ -134,7 +135,9 @@ const handlePostback = (sender_psid, received_postback) => {
 // pass the event to the appropriate handler function
 if (webhook_event.message) {
   handleMessage(sender_psid, webhook_event.message);
+  console.log('event is a message')
 } else if (webhook_event.postback) {
   handlePostback(sender_psid, webhook_event.postback);
+  console.log('event is a postback')
 }
 
