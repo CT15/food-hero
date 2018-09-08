@@ -106,7 +106,7 @@ function handleMessage(sender_psid, received_message) {
       case 0:
         db.collection('shares').add({
           isAvailable: true,
-          submissionTime: admin.firestore.Timestamp.fromDate(new Date())
+          submissionTime: admin.firestore.Timestamp.fromDate(new Date().toDateString('yyyy-MM-dd HH:mm:ss'))
         }).then(ref => {
           docId = ref.id;
         });
