@@ -6,7 +6,7 @@ let express = require('express'),
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
  
-app.listen(8989, () => console.log('Example app listening on port 8989!'));
+app.listen(process.env.PORT || 1337, () => console.log('Example app listening on port 8989!'));
  
 app.get('/', (req, res) => res.send('583615801'));
 
