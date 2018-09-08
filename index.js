@@ -14,6 +14,8 @@ admin.initializeApp({
 
 var db = admin.firestore();
 
+let messageCount = 0;
+
 const request = require('request');
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -89,7 +91,6 @@ app.post('/webhook', (req, res) => {
 
 });
 
-let messageCount = 0;
 let docId = '';
 
 function handleMessage(sender_psid, received_message) {
