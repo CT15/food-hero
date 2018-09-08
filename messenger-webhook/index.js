@@ -74,3 +74,67 @@ app.post('/webhook', (req, res) => {
  
 });
 
+// Handles messages events
+const handleMessage = (sender_psid, received_message) => {
+    let response;
+ 
+    if (received_message.text) {
+      res.send('Hello World!')
+    }
+}
+ 
+// 
+
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+const handlePostback = (sender_psid, received_postback) => {
+    let response;
+ 
+    // Get the payload for the postback
+    let payload = received_postback.payload;
+ 
+    // Set the response based on the postback payload
+    if (payload === 'CAT_PICS') {
+        response = imageTemplate('cats', sender_psid);
+        callSendAPI(sender_psid, response, function(){
+            callSendAPI(sender_psid, askTemplate('Show me more'));
+        });
+    } else if (payload === 'DOG_PICS') {
+        response = imageTemplate('dogs', sender_psid);
+        callSendAPI(sender_psid, response, function(){
+            callSendAPI(sender_psid, askTemplate('Show me more'));
+        });
+    } else if(payload){
+        response = askTemplate('Are you a Cat or Dog Person?');
+        callSendAPI(sender_psid, response);
+    }
+    // Send the message to acknowledge the postback
+}
+
+// Check if the event is a message or postback and
+// pass the event to the appropriate handler function
+if (webhook_event.message) {
+  handleMessage(sender_psid, webhook_event.message);
+} else if (webhook_event.postback) {
+  handlePostback(sender_psid, webhook_event.postback);
+}
+
