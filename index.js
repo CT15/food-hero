@@ -136,7 +136,7 @@ function handleMessage(sender_psid, received_message) {
           location: received_message
         });
         // expiry
-        text = 'Please indicate the time of expiry of the food (YYYY/MM/DD HH:MM:SS).'
+        text = 'Please indicate the time of expiry of the food (YYYY-MM-DD HH:MM:SS).'
         break;
       case 2:
         // expiry
