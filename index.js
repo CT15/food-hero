@@ -238,7 +238,7 @@ function handlePostback(sender_psid, received_postback) {
   // Set the response based on the postback payload
   if (payload === 'yes') {
     db.collection('Shares').doc(docId).update({
-      image: received_postback.referral.source
+      image: received_postback
     });
     response = { "text": "That is all. Thank you! We will be collecting the food at the indicated timing." }
     messageCount = 0;
