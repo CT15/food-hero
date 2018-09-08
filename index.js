@@ -118,12 +118,6 @@ function handleMessage(sender_psid, received_message) {
             "text": "Here is a quick reply example!",
             "quick_replies":[
               {
-                "content_type":"text",
-                "title":"Search",
-                "payload":"<POSTBACK_PAYLOAD>",
-                "image_url":"http://example.com/img/red.png"
-              },
-              {
                 "content_type":"location"
               }
             ]
