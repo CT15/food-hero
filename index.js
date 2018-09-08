@@ -141,7 +141,7 @@ function handleMessage(sender_psid, received_message) {
       case 2:
         // expiry
         db.collection('Shares').doc(docId).set({
-          bestBefore: admin.firestore.Timestamp.fromDate(new Date(received_message))
+          bestBefore: admin.firestore.Timestamp.fromDate(new Date('2018-09-09 09:35:34'))
         });
         // dietary restriction
         text = 'If the food is not suitable for people with any special dietary restrictions, please indicate so (e.g. halal, vegetarion). Otherwise, please reply "None". '
