@@ -183,7 +183,7 @@ function handleMessage(sender_psid, received_message) {
         });
 
         // photo
-        text = 'Please take a photo of the food so that we can estimate the number of containers we need to bring with us.'
+        text = 'Please take a photo of the food so that we can estimate how many it will feed.'
         response = {
           "text": text
         }
