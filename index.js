@@ -3,6 +3,8 @@ let express = require('express'),
   bodyParser = require('body-parser'),
   app = express();
 
+const moment = require('moment');
+
 var admin = require("firebase-admin");
 
 var serviceAccount = require("./fbreducewastage-firebase-adminsdk-j5xi5-9fb749300a.json");
@@ -107,7 +109,7 @@ function handleMessage(sender_psid, received_message) {
       case 0:
         db.collection('Shares').add({
           isAvailable: true,
-          submissionTime: admin.firestore.Timestamp.fromDate(new Date('2018-09-09 09:35:34'))
+          submissionTime: admin.firestore.Timestamp.fromDate(moment().format())
         }).then(ref => {
           docId = ref.id;
         });
@@ -142,18 +144,35 @@ function handleMessage(sender_psid, received_message) {
       case 2:
         // expiry
         db.collection('Shares').doc(docId).update({
-          bestBefore: admin.firestore.Timestamp.fromDate(new Date('2018-09-09 09:35:34'))
+          bestBefore: admin.firestore.Timestamp.fromDate(new Date(received_message.text))
         });
         // dietary restriction
-        text = 'If the food is not suitable for people with any special dietary restrictions, please indicate so (e.g. halal, vegetarion). Otherwise, please reply "None". '
+        text = 'If the food is not suitable for people with any special dietary restrictions, please indicate so (e.g. halal vegetarion). Otherwise, please reply "None". '
         break;
       case 3:
         // dietary restriction
         db.collection('Shares').doc(docId).update({
           dietRestrictions: received_message.text.split(" ")
         });
+        // describe food
+        text = 'Please provide a short description of the food.'
+        break;
+      case 4:
+        // describe food
+        db.collection('Shares').doc(docId).update({
+          title: received_message.text
+        });
+        // collection time
+        text = 'When do you want us to collect the food (YYYY-MM-DD HH:MM:SS)?'
+        break;
+      case 5:
+        // collection time
+        db.collection('Shares').doc(docId).update({
+          collectionTime: admin.firestore.Timestamp.fromDate(new Date(received_message.text))
+        });
+
         // photo
-        text = 'Please take a photo of the food so that we can estimate the number of containers we need to bring with us.'
+        text = 'Please provide photo of the food so that we can estimate the number of containers we need to bring with us.'
         break;
     }
 
