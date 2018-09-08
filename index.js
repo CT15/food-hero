@@ -109,7 +109,7 @@ function handleMessage(sender_psid, received_message) {
       case 0:
         db.collection('Shares').add({
           isAvailable: true,
-          submissionTime: new Date()
+          submissionTime: admin.firestore.Timestamp.fromDate(new Date('2222-22-22 23:23:23'))
         }).then(ref => {
           docId = ref.id;
         });
@@ -143,7 +143,7 @@ function handleMessage(sender_psid, received_message) {
       case 2:
         // expiry
         db.collection('Shares').doc(docId).update({
-          bestBefore: admin.firestore.Timestamp.fromDate(new Date(received_message.text))
+          bestBefore: admin.firestore.Timestamp.fromDate(new Date('2222-22-22 23:23:23'))
         });
         // dietary restriction
         text = 'If the food is not suitable for people with any special dietary restrictions, please indicate so (e.g. halal, vegetarion). Otherwise, please reply "None". '
@@ -171,7 +171,7 @@ function handleMessage(sender_psid, received_message) {
       case 5:
         // collection time
         db.collection('Shares').doc(docId).update({
-          collectionTime: admin.firestore.Timestamp.fromDate(new Date(received_message.text))
+          collectionTime: admin.firestore.Timestamp.fromDate(new Date('2222-22-22 23:23:23'))
         });
 
         // photo
