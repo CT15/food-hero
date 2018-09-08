@@ -161,6 +161,9 @@ function handleMessage(sender_psid, received_message) {
         });
         // describe food
         text = 'Please provide a short description of the food.'
+        response = {
+          "text": text
+        }
         break;
       case 4:
         // describe food
@@ -169,6 +172,9 @@ function handleMessage(sender_psid, received_message) {
         });
         // collection time
         text = 'Please indicate how long more (in hour) you want us to come and pick up the food.'
+        response = {
+          "text": text
+        }
         break;
       case 5:
         // collection time
