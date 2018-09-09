@@ -243,29 +243,38 @@ function handlePostback(sender_psid, received_postback) {
     });
 
     let url = 'https://foodhero.pythonanywhere.com/foodhero/default/numBoxes?url=' + attachment_url + '&width=2.5';
-    https.get(url, function(res){
-      var body = '';
+    let numBoxes = 0
+    fetch(url).then((res) => {
+      return res.json();
+    }).then((data) => {
+      numBoxes = data
+      response = { "text": "That is all. Thank you! We will be bringing " + numBoxes + "boxes with us. Collecting the food at the indicated timing." }
+      // Send the message to acknowledge the postback
+      callSendAPI(sender_psid, response);
+    }).catch(err => {
+      console.log("error for http", err)
+    })
+    // https.get(url, function(res){
+    //   var body = '';
   
-      res.on('data', function(chunk){
-          body += chunk;
-      });
+    //   res.on('data', function(chunk){
+    //       body += chunk;
+    //   });
   
-      res.on('end', function(){
-          var json = JSON.parse(body);
-          console.log("json obj", json)
-          console.log("Got a response: ", json.numBoxes);
-      });
-    }).on('error', function(e){
-        console.log("Got an error: ", e);
-    });
-
-    response = { "text": "That is all. Thank you! We will be bringing " + json.numBoxes + "boxes with us. Collecting the food at the indicated timing." }
+    //   res.on('end', function(){
+    //       var json = JSON.parse(body);
+    //       console.log("json obj", json)
+    //       console.log("Got a response: ", json.numBoxes);
+    //   });
+    // }).on('error', function(e){
+    //     console.log("Got an error: ", e);
+    // });
     messageCount = 0;
   } else if (payload === 'no') {
     response = { "text": "Oops, try sending another image." }
+    // Send the message to acknowledge the postback
+    callSendAPI(sender_psid, response);
   }
-  // Send the message to acknowledge the postback
-  callSendAPI(sender_psid, response);
 }
 
 const callSendAPI = (sender_psid, response, cb = null) => {
