@@ -3,7 +3,9 @@ let express = require('express'),
   bodyParser = require('body-parser'),
   app = express();
 
-const moment = require('moment');
+const https = require('https');
+const fetch = require('node-fetch');
+const imgur = require('imgur');
 
 var admin = require("firebase-admin");
 
@@ -96,6 +98,7 @@ app.post('/webhook', (req, res) => {
 });
 
 let docId = '';
+let attachment_url = '';
 
 function handleMessage(sender_psid, received_message) {
   let response;
@@ -195,7 +198,7 @@ function handleMessage(sender_psid, received_message) {
 
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
-    let attachment_url = received_message.attachments[0].payload.url;
+    attachment_url = received_message.attachments[0].payload.url;
     response = {
       "attachment": {
         "type": "template",
@@ -237,16 +240,54 @@ function handlePostback(sender_psid, received_postback) {
 
   // Set the response based on the postback payload
   if (payload === 'yes') {
-    db.collection('Shares').doc(docId).update({
-      image: received_postback
-    });
-    response = { "text": "That is all. Thank you! We will be collecting the food at the indicated timing." }
+    imgur.uploadUrl(attachment_url).then((json) => {
+      db.collection('Shares').doc(docId).update({
+        image: json.data.link
+      });
+      let url = 'https://foodhero.pythonanywhere.com/foodhero/default/numBoxes?url=' + json.data.link + '&width=2.5';
+      let numBoxes = 0
+      fetch(url).then((res) => {
+        return res.json();
+      }).then((data) => {
+        console.log('collecting data: ', data);
+        numBoxes = data.numBoxes
+        db.collection('Shares').doc(docId).update({
+          numUnits: numBoxes
+        })
+
+        if (data.numBoxes > 0) {
+          response = { "text": "That is all. Thank you! From the image, we estimate that " + numBoxes + " box(es) are needed to contain the items. Volunteers will collect the food at around the indicated timing." }
+        } else {
+          response = { "text": "That is all. Thank you! Volunteers will collect the food at around the indicated timing." }
+        }
+        // Send the message to acknowledge the postback
+        callSendAPI(sender_psid, response);
+      })
+    })
+    .catch(err => {
+      console.log("error for http", err)
+    })
+    // https.get(url, function(res){
+    //   var body = '';
+  
+    //   res.on('data', function(chunk){
+    //       body += chunk;
+    //   });
+  
+    //   res.on('end', function(){
+    //       var json = JSON.parse(body);
+    //       console.log("json obj", json)
+    //       console.log("Got a response: ", json.numBoxes);
+    //   });
+    // }).on('error', function(e){
+    //     console.log("Got an error: ", e);
+    // });
     messageCount = 0;
   } else if (payload === 'no') {
     response = { "text": "Oops, try sending another image." }
+    // Send the message to acknowledge the postback
+    callSendAPI(sender_psid, response);
   }
-  // Send the message to acknowledge the postback
-  callSendAPI(sender_psid, response);
 }
 
 const callSendAPI = (sender_psid, response, cb = null) => {
