@@ -244,18 +244,18 @@ function handlePostback(sender_psid, received_postback) {
       db.collection('Shares').doc(docId).update({
         image: json.data.link
       });
+      let url = 'https://foodhero.pythonanywhere.com/foodhero/default/numBoxes?url=' + json.data.link + '&width=2.5';
+      let numBoxes = 0
+      fetch(url).then((res) => {
+        return res.json();
+      }).then((data) => {
+        numBoxes = data
+        response = { "text": "That is all. Thank you! We will be bringing " + numBoxes + "boxes with us. Collecting the food at the indicated timing." }
+        // Send the message to acknowledge the postback
+        callSendAPI(sender_psid, response);
+      })
     })
-
-    let url = 'https://foodhero.pythonanywhere.com/foodhero/default/numBoxes?url=' + attachment_url + '&width=2.5';
-    let numBoxes = 0
-    fetch(url).then((res) => {
-      return res.json();
-    }).then((data) => {
-      numBoxes = data
-      response = { "text": "That is all. Thank you! We will be bringing " + numBoxes + "boxes with us. Collecting the food at the indicated timing." }
-      // Send the message to acknowledge the postback
-      callSendAPI(sender_psid, response);
-    }).catch(err => {
+    .catch(err => {
       console.log("error for http", err)
     })
     // https.get(url, function(res){
