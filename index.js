@@ -251,7 +251,7 @@ function handlePostback(sender_psid, received_postback) {
       }).then((data) => {
         console.log(data);
         numBoxes = data.numBoxes
-        response = { "text": "That is all. Thank you! We will be bringing " + numBoxes + "boxes with us. Collecting the food at the indicated timing." }
+        response = { "text": "That is all. Thank you! From the image, we estimate that " + numBoxes + " box(es) are needed to contain the items. Collecting the food at the indicated timing." }
         // Send the message to acknowledge the postback
         callSendAPI(sender_psid, response);
       })
