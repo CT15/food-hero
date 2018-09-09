@@ -4,6 +4,7 @@ let express = require('express'),
   app = express();
 
 const https = require('https');
+const fetch = require('node-fetch');
 
 var admin = require("firebase-admin");
 
