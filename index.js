@@ -249,9 +249,17 @@ function handlePostback(sender_psid, received_postback) {
       fetch(url).then((res) => {
         return res.json();
       }).then((data) => {
-        console.log(data);
+        console.log('collecting data: ', data);
         numBoxes = data.numBoxes
-        response = { "text": "That is all. Thank you! From the image, we estimate that " + numBoxes + " box(es) are needed to contain the items. Collecting the food at the indicated timing." }
+        db.collection('Shares').doc(docId).update({
+          numUnits: numBoxes
+        })
+
+        if (data.numBoxes > 0) {
+          response = { "text": "That is all. Thank you! From the image, we estimate that " + numBoxes + " box(es) are needed to contain the items. Volunteers will collect the food at around the indicated timing." }
+        } else {
+          response = { "text": "That is all. Thank you! Volunteers will collect the food at around the indicated timing." }
+        }
         // Send the message to acknowledge the postback
         callSendAPI(sender_psid, response);
       })
