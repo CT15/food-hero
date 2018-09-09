@@ -198,7 +198,11 @@ function handleMessage(sender_psid, received_message) {
 
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
-    attachment_url = received_message.attachments[0].payload.url;
+    if (received_message.attachments[0].payload != null) {
+      attachment_url = received_message.attachments[0].payload.url;
+    } else {
+      attachment_url = "";
+    }
     response = {
       "attachment": {
         "type": "template",
