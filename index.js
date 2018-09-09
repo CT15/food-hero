@@ -5,6 +5,7 @@ let express = require('express'),
 
 const https = require('https');
 const fetch = require('node-fetch');
+const imgur = require('imgur');
 
 var admin = require("firebase-admin");
 
@@ -239,9 +240,11 @@ function handlePostback(sender_psid, received_postback) {
 
   // Set the response based on the postback payload
   if (payload === 'yes') {
-    db.collection('Shares').doc(docId).update({
-      image: attachment_url
-    });
+    imgur.uploadUrl(attachment_url).then((json) => {
+      db.collection('Shares').doc(docId).update({
+        image: json.data.link
+      });
+    })
 
     let url = 'https://foodhero.pythonanywhere.com/foodhero/default/numBoxes?url=' + attachment_url + '&width=2.5';
     let numBoxes = 0
